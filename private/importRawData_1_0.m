@@ -56,21 +56,7 @@ if size(dataStruct) > 0
             end
         end
     end
- 
-%TODO: Figure out more ways to check the data, finish the below way.
-%     %Are the column headers consistent with the first row of the data
-%     for k = 1:col-2
-%         header1 = str2double(colhead{k});
-%         header2 = str2double(colhead{k+1});
-%         column1 = data(1,k);
-%         column2 = data(1,k+1);
-%         
-%         if(header1 > header2 && column1 < column2)
-%             status = [status; 'WARNING: Inconsisten ordering between column and header']
-%         end
-%         
-%     end
-    
+     
     %Check if the raw data already exist in the structure
     for k = 1:colStruct
         xraw = dataStruct(k).xraw;

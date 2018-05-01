@@ -2,28 +2,18 @@ function nextDataStruct = MasterCurve_1_0(data, colhead, reft, name)
 %% ------------------------------SETUP-------------------------------------
 %--------------------------------------------------------------------------
 %--------------------------------------------------------------------------
-%Import the dataStructure from the base workspace.
-% dataStruct = evalin('base','s');
 
-%Program is parametrise so the row and columns of the Rheology data
+%Program is parametrise so the row and column size of the Rheology data
 %can change and the code will function.
 a = size(data);
 row = a(1,1);
 col = a(1,2);
-
-% b = size(dataStruct);
-% colStruct = b(1,2) + 1;
 
 nextDataStruct = struct('info',{}, 'header', {}, 'xraw', {}, 'yraw', {}, 'xShifted', {}, 'yShifted', {}, 'modelStruct',{}, 'checkMatrix', {}, 'MasterCurve', {});
 
 y = zeros(row,col-1);
 y(:,1:col-1) = data(:,1:col-1);
 x = data(:,col);
-
-% dataStruct(colStruct).info = {name, reft};
-% dataStruct(colStruct).header = colhead;
-% dataStruct(colStruct).xraw = x;
-% dataStruct(colStruct).yraw = y;
 
 nextDataStruct(1).info = {name, reft};
 nextDataStruct(1).header = colhead;
@@ -35,25 +25,16 @@ disp(['ref temperature is', colhead(1,refCol)]);
 
 %Apply vertical shifting for the y-axis values of each curve. 
 yShifted = verticalShifter(y, colhead, refCol);
-%yShifted = y;
-%assignin('base', 'yshifted', yShifted);
-%assignin('base', 'x', x);
 
-%tic
 xShifted = shifterSon(x, yShifted, col, row, refCol);
-%toc
 
 %The tolerance was set here once
 tol = 1/6;
 
-%assignin('base', 'xshifted', xShifted);
-
-
-% dataStruct(colStruct).xShifted = xShifted;
+%Save the shifted data
 nextDataStruct(1).yShifted = yShifted;
 nextDataStruct(1).xShifted = xShifted;
 
-%assignin('base', 'logat', getLogAT(refCol , xShifted));
 nextDataStruct(1).modelStruct = getArrheniusModel(refCol, colhead, xShifted);
 
 
@@ -139,14 +120,10 @@ while true
 
 end %ends the big while loop
 
-% dataStruct(colStruct).checkMatrix = checkMatrix;
-% dataStruct(colStruct).MasterCurve = assembleMC(y,xShifted,checkMatrix);
-
+%Save to data structure
 nextDataStruct(1).checkMatrix = checkMatrix;
 nextDataStruct(1).MasterCurve = assembleMC(yShifted,xShifted,checkMatrix);
 
-%Do required changes to base workspace.
-% assignin('base', 's' ,dataStruct);
 
 end
 
